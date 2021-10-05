@@ -154,7 +154,7 @@ removeBtn.onclick = () => {
 }
 
 function progressBar(){
-	taskNum.textContent = taskArray.length; //counting the number of remaining task
+	taskNum.textContent = taskArray.length; //displays the number of remaining task
 	if(taskArray.length != 0 ){
 		lastSection.style.visibility = "visible"
 	}else{
@@ -166,7 +166,7 @@ function progressBar(){
 		count++;  //count for number of checked box
 		}
 	}
-	taskDone.textContent = count; //  number of tasks done or checked
+	taskDone.textContent = count; // displays the number of task checked
 
 	if(taskDone.textContent == 0 ){
 		removeBtn.classList.remove("active");  //unactive remove all checked button if there is no checked box

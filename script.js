@@ -7,7 +7,7 @@ const removeBtn = document.querySelector(".removeChecked button");
 const taskNum = document.querySelector(".taskNum"); // the number of tasks
 const taskDone = document.querySelector(".progressNum"); // the number checked of tasks
 const lastSection = document.querySelector(".lastSection");
-const progressBar =  document.querySelector(".progress");
+
 
 taskInput.onkeyup = ()=>{
 		let userInput = taskInput.value; 	//getting user entered value
@@ -68,17 +68,9 @@ function showTasks(){
 										 			</li>`
 		});
 
-		
-		taskNum.textContent = taskArray.length; //passing the number of tasks in taskNum
-		if(taskArray.length != 0 ){
-			lastSection.style.visibility = "visible"
-		}else{
-			lastSection.style.visibility = "hidden"	//hides the last section if there are no tasks
-		}
-		//console.log(taskArray.length);
-
 		todo.innerHTML = NewTask; // adding new li tag inside ul tag
-		taskInput.value = ""; //once task added leave the input field blank		
+		taskInput.value = ""; //once task added leave the input field blank	
+		progressBar();	
 }
 
 //delete task function
@@ -92,28 +84,8 @@ function deleteTask(index){
 		var closestLi = index.closest("li"); 
 		closestLi.remove();	//remove the list that is displayed
 		
-		// for the progress bar after deleting 
-		
-		taskNum.textContent = taskArray.length;  //counting the number of remaining task
-		//console.log(textList.length);
-		if(taskArray.length != 0 ){
-			lastSection.style.visibility = "visible"
-		}else{
-			lastSection.style.visibility = "hidden" //hides the last section if there are no tasks remaining
-		}
-		var count = 0;   
-		for(let i =0; i < taskArray.length ; i ++){
-			if(checks[i].checked){
-			count++;  //count for number of checked box
-			}
-		}
-		taskDone.textContent = count; //  number of tasks done or checked
-		if(taskDone.textContent == 0 ){
-			removeBtn.classList.remove("active");  //unactive remove all checked button if there is no checked box
-		}else{
-			removeBtn.classList.add("active");		//active remove all checked button if there is a checked box
-		}
-
+		// updating the progress bar after deleting 
+		progressBar();	
 }
 
 //edit task function
@@ -144,28 +116,16 @@ function editTask(index){
 //function for checking the boxes if checked and putting a line-through to the text
 function checkDone(index){
 		var closestLi = index.closest("li"); 
-		var count = 0;   //count for number of checked box
-		
-		for(let i =0; i < taskArray.length ; i ++){
-			if(checks[i].checked){
-				count++;  //count for number of checked box
-			}
+
+		if(index.checked){  //if checkbox is checked
+			//Add class nga linethrough
+			closestLi.classList.add("line-through");
+		}else{
+			//remove linethrough class
+			closestLi.classList.remove("line-through");
 		}
-			taskDone.textContent = count; //  number of tasks done or checked
-
-			if(index.checked){  //if checkbox is checked
-				//Add class nga linethrough
-				closestLi.classList.add("line-through");
-			}else{
-				//remove linethrough class
-				closestLi.classList.remove("line-through");
-			} 
-
-			if(taskDone.textContent == 0 ){
-				removeBtn.classList.remove("active"); //unactive remove all checked button if there is no checked box
-			}else{
-				removeBtn.classList.add("active");	//active remove all checked button if there is a checked box
-			}
+		// updating the progress bar after checking  
+		progressBar();
 
 }
 
@@ -188,27 +148,30 @@ removeBtn.onclick = () => {
 		//after remove the li again update the local storage
 		localStorage.setItem("New Task", JSON.stringify(taskArray));  //transforming js object into a json string	
 
-
-		// for the progress bar after deleting all checked lists
-		taskNum.textContent = taskArray.length; //counting the number of remaining task
-		if(taskArray.length != 0 ){
-			lastSection.style.visibility = "visible"
-		}else{
-			lastSection.style.visibility = "hidden" //hides the last section if there are no tasks remaining
-		}
-		var count = 0;   
-		for(let i =0; i < taskArray.length ; i ++){
-			if(checks[i].checked){
-			count++;  //count for number of checked box
-			}
-		}
-		taskDone.textContent = count; //  number of tasks done or checked
-
-		if(taskDone.textContent == 0 ){
-			removeBtn.classList.remove("active");  //unactive remove all checked button if there is no checked box
-		}else{
-			removeBtn.classList.add("active");	//active remove all checked button if there is a checked box
-		}
+		// updating the progress bar after deleting all checked lists
+		progressBar();
+		
 }
 
+function progressBar(){
+	taskNum.textContent = taskArray.length; //counting the number of remaining task
+	if(taskArray.length != 0 ){
+		lastSection.style.visibility = "visible"
+	}else{
+		lastSection.style.visibility = "hidden" //hides the last section if there are no tasks remaining
+	}
+	var count = 0;   
+	for(let i =0; i < taskArray.length ; i ++){
+		if(checks[i].checked){
+		count++;  //count for number of checked box
+		}
+	}
+	taskDone.textContent = count; //  number of tasks done or checked
+
+	if(taskDone.textContent == 0 ){
+		removeBtn.classList.remove("active");  //unactive remove all checked button if there is no checked box
+	}else{
+		removeBtn.classList.add("active");	//active remove all checked button if there is a checked box
+	}
+}
 
